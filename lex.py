@@ -1,7 +1,7 @@
 p_reservadas = ["class", "else", "false", "fi", "if", "in", "inherits", "isvoid", "let", "loop", "pool", 
                 "then", "while", "case", "esac", "new", "of", "not", "true"]
 
-simbolos = [";", ")", "*", "{", "}", "~", "@", "."] 
+simbolos = [";", "*", ")", "{", "}", "~", "@", ".", ":", ",", "<-" "=>" , "+"] 
 
 lst_read = None
 
@@ -26,21 +26,16 @@ def lexico(arq):
         if not c:
             return palavra if palavra else None
             
-        if c.isalpha():
+        if c.isalpha() or c.isdigit() or c == "_":
             palavra += c
+            continue
 
-        elif c in simbolos:
-            if palavra:
-                lst_read = c
-                return palavra
-            return c
-        
         if c.isspace():
             if palavra:
                 return palavra
             continue
         
-        elif c == "(":
+        if c == "(":
             proximo = pega_char(arq)
             if proximo == "*":
                 while True:
@@ -51,13 +46,22 @@ def lexico(arq):
                     if palavra: return palavra
                     else: continue
             else:
-                lst_read = proximo
-                if palavra:
-                    lst_read = "("
+                if palavra: #Caso não seja comentário
+                    lst_read = "(" 
+                    if proximo:
+                        arq.seek(arq.tell() - 1) 
                     return palavra
+                if proximo:
+                    arq.seek(arq.tell() - 1)
                 return "("
         
-        elif c == '"':
+        if c in simbolos:
+            if palavra:
+                lst_read = c
+                return palavra
+            return c
+        
+        if c == '"':
             string = '"'
             while True:
                 char_str = arq.read(1)
@@ -69,16 +73,27 @@ def lexico(arq):
                 lst_read = string
                 return palavra
             return string
-
-
+        
+        if palavra:
+            return palavra
+        
+        if c == "-":
+            proximo = pega_char(arq)
+            if proximo == "-":
+                while True:
+                    char_com = arq.read(1)
+                    if not char_com: break
+                    if char_com == "\n": break
+                    if palavra: return palavra
+                    else: continue
 
 
 def main():
     with open("teste.txt", "r") as arquivo:
 
-        p1 = lexico(arquivo)
-        print(f"Token 1: {p1}")
+        p = lexico(arquivo)
+        while(p):
+            print("Token: " + p)
+            p = lexico(arquivo)
         
-        p2 = lexico(arquivo)
-        print(f"Token 2: {p2}")
 main()

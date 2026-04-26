@@ -1,0 +1,13 @@
+class Main inherits IO {
+    main(): Object {
+        let hello : String <- "Hello, ",
+            2name : String => "",
+            ending : String <- "!\n"
+            numero <- 55 + 17 - 2 * 8 / 4
+        in {
+            out_string("Please enter your name:\n");
+            name <- in_string();
+            (*out_string hello.concat(name.concat(ending));*)
+        }
+    };
+};

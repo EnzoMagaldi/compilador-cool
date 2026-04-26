@@ -80,6 +80,7 @@ def lexico(arq):
                     if char_com == "\n": break
                     if palavra: return palavra
                     else: continue
+                    
         if c == "<":
             if palavra:
                 lst_read = "<"

@@ -41,9 +41,17 @@ def lexico(arq):
         if c == '"':
             if palavra:
                 lst_read = '"'
-                return palavra
-            dentro_string = not dentro_string
-            return (linha, tipos["SIMBOLO"], c)
+                return (linha, tipos["IDENTIFICADOR"], palavra)
+            # Consome tudo até o próximo '"' e retorna como STRING
+            conteudo = ""
+            while True:
+                ch = arq.read(1)
+                if not ch or ch == '"':
+                    break
+                if ch == '\n':
+                    linha += 1
+                conteudo += ch
+            return (linha, tipos["STRING"], conteudo)
         
         if dentro_string:
             proximo = arq.read(1)
@@ -130,8 +138,9 @@ def lexico(arq):
         #Retorna um simbolo caso não seja uma palavra ou um caractere que requer atenção 
         return (linha, tipos["SIMBOLO"], c)
 
-        
-'''def main():
+
+'''        
+def main():
     with open("teste.txt", "r") as arquivo:
 
         p = lexico(arquivo)

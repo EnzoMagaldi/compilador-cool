@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional, List, Any
 from lex import lexico, tipos
 
@@ -160,8 +160,8 @@ class TokenStream:
         self._pos += 1
         return tok
 
-    def pushback(self, tok):
-        """Devolve o último token consumido."""
+    def pushback(self):
+        """Vai pra atrás até o último token consumido."""
         self._pos -= 1
 
     def peek_val(self):
@@ -345,7 +345,7 @@ class Parser:
                 value = self.parse_expr()   # associa à direita
                 return AssignNode(tok[2], value, linha)
             else:
-                self.ts.pushback(tok)       # não era atribuição
+                self.ts.pushback()       # não era atribuição
 
         return self.parse_not()
 
@@ -584,8 +584,8 @@ def main():
             for erro in parser.erros:
                 print(f"  {erro}")
         else:
-            print("Parsing concluído sem erros.")
-            print(ast)
+            print("Parsing concluído sem erros.\n")
+            #print(ast)
 
 if __name__ == "__main__":
     main()

@@ -49,7 +49,14 @@ def lexico(arq):
                 return processa_palavra(palavra, linha)
             return None
 
-        if c.isalpha() or c.isdigit() or c == "_":
+        if c.isalpha() or c == "_":
+            if not palavra.isdigit():
+                palavra += c
+                continue
+            else:
+                return processa_palavra(palavra, linha)
+
+        if c.isdigit():
             palavra += c
             continue
         
